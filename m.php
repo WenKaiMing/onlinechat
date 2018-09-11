@@ -1,0 +1,1202 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>在线聊天室</title>
+<script src="js/jquery.min.js"></script>
+<style>
+ body {
+	/*background:url(images/yuyin_bg.png) no-repeat;
+	*/
+        				background:#eee;
+	background-size:100%;
+	font-family:"微软雅黑";
+}
+@media all and (min-width:100%) {
+	body,html,.wenwen-footer,.speak_window {
+	width:100%!important;
+	margin:0 auto
+}
+.speak_window,.wenwen-footer {
+	left:50%!important;
+	margin-left:-320px
+}
+}input,button {
+	outline:none;
+}
+.wenwen-footer {
+	width:100%;
+	position:fixed;
+	bottom:-5px;
+	left:0;
+	background:#fff;
+	padding:10px;
+	border-top:solid 1px #ddd;
+	box-sizing:border-box;
+	display:flex;
+	justify-content:space-around;
+	align-items:center;
+	padding-top:1%;
+}
+.wenwen_btn,.wenwen_help {
+	width:15%;
+	text-align:center;
+}
+.wenwen_btn img,.wenwen_help img {
+	height:30px;
+}
+.wenwen_text {
+	height:40px;
+	border-bottom:solid 1px #C3BFBF;
+	box-sizing:border-box;
+	width:66%;
+	text-align:center;
+	overflow:hidden;
+	margin-left:2%;
+}
+.circle-button {
+	padding:0 5px;
+}
+.wenwen_text .circle-button {
+	font-size:14px;
+	color:#666;
+	line-height:38px;
+}
+.write_box {
+	width:100%;
+	height:40px;
+	line-height:40px;
+}
+.write_box input {
+	height:40px;
+	padding:0 5px;
+	line-height:40px;
+	width:100%;
+	box-sizing:border-box;
+	border:0;
+	font-family:"微软雅黑";
+	font-size:15px;
+}
+.wenwen_help button {
+	width:95%;
+	background:#8CCC49;
+	color:#fff;
+	border-radius:5px;
+	border:0;
+	height:30px;
+	display:block;
+	font-family:"微软雅黑";
+}
+#wenwen {
+	height:100%;
+}
+.speak_window {
+	overflow-y:scroll;
+	height:100%;
+	width:100%;
+	padding-top:50px;
+	position:fixed;
+	top:0;
+	left:0;
+}
+.speak_box {
+	margin-bottom:70px;
+	padding:10px;
+}
+.question,.answer {
+	margin-bottom:1rem;
+}
+.question {
+	text-align:right;
+}
+.question>div {
+	display:inline-block;
+}
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
+.clear {
+	clear:both;
+}
+.heard_img {
+	height:44px;
+	width:44px;
+	border-radius:3px;
+	overflow:hidden;
+	background:#ddd;
+}
+.heard_img img {
+	width:100%;
+	height:100%
+}
+.question_text,.answer_text {
+	box-sizing:border-box;
+	position:relative;
+	display:table-cell;
+	min-height:45px;
+}
+.question_text {
+	padding-right:12px;
+}
+.answer_text {
+	padding-left:12px;
+}
+.question_text p {
+	border-radius:5px;
+	padding:.5rem;
+	margin:0;
+	font-size:14px;
+	line-height:20px;
+	box-sizing:border-box;
+	vertical-align:middle;
+	display:table-cell;
+	word-wrap:break-word;
+	max-width:65vw;
+	min-width:10vw;
+	box-shadow:-1px 1px 1px 1px rgba(0,0,0,.1);
+}
+.answer_text p {
+	border-radius:5px;
+	padding:.5rem;
+	margin:0;
+	font-size:14px;
+	line-height:20px;
+	box-sizing:border-box;
+	vertical-align:middle;
+	display:table-cell;
+	word-wrap:break-word;
+	max-width:65vw;
+	min-width:10vw;
+	box-shadow:1px 1px 1px 1px rgba(0,0,0,.1);
+}
+.answer_text p {
+	background:#fff;
+}
+.question_text p {
+	background:#8CCC49;
+	color:#000;
+	text-align:left;
+}
+.question_text i,.answer_text i {
+	width:0;
+	height:0;
+	border-top:5px solid transparent;
+	border-bottom:5px solid transparent;
+	position:absolute;
+	top:14px;
+}
+.answer_text i {
+	border-right:6px solid #fff;
+	left:6px;
+}
+.question_text i {
+	border-left:6px solid #8CCC49;
+	right:6px;
+}
+.answer_text p a {
+	color:#42929d;
+	display:inline-block;
+}
+audio {
+	display:none;
+}
+.saying {
+	position:fixed;
+	bottom:30%;
+	left:50%;
+	width:120px;
+	margin-left:-60px;
+	display:none;
+}
+.saying img {
+	width:100%;
+}
+.write_list {
+	position:absolute;
+	left:0;
+	width:100%;
+	background:#fff;
+	border-top:solid 1px #ddd;
+	padding:5px;
+	line-height:30px;
+}
+		/*表情区域开始*/
+		#ems{position:absolute; z-index:5; display:none; top:0px; left:0px; max-width:230px; background-color:#F1F1F1; border:solid 1px #CCC; padding:5px;}
+		#ems img{width:44px; height:44px; border:solid 1px #FFF; cursor:pointer;}
+		#ems img:hover,#ems img:active{border-color:#A4B7E3;}
+		#ems a{color:#069; border-radius:2px; display:inline-block; margin:2px 5px; padding:1px 8px; text-decoration:none; background-color:#D5DFFD;}
+		#ems a:hover,#ems a:active,#ems a.ck{color:#FFF; background-color:#069;}
+		.tc{text-align:center; margin-top:5px;}
+		/*表情区域结束*/
+* {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+.header {
+	position:fixed;
+	right:0;
+	left:0;
+	z-index:100;
+	height:50px;
+	top:0;
+	padding:0;
+	background-color:#f7f7f8;
+	border-bottom:1px solid #e7e7e7;
+	-webkit-backface-visibility:hidden;
+	backface-visibility:hidden;
+}	
+.nav {
+	width:60%;
+	height:50px;
+	/*margin:0px auto;*/
+	padding:0;
+	float:left;
+}
+.nav p {
+	display:block;
+	padding-left:0px;
+	line-height:50px;
+	max-height:50px;
+	font-size:25px;
+	text-align:center;
+	border-bottom:1px solid #CCC;
+	margin:0 auto;
+}
+.set {
+	background-color:#f7f7f8;
+}
+.select {
+	background-color:gray;
+}
+.new {
+	margin:0 auto;
+	width:60%;
+	max-height:180px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+	position:absolute;
+	border:1px solid #CCC;
+	padding-left:0px;
+	display:none;
+}
+ /* for Chrome 不显示滚动栏*/
+.new::-webkit-scrollbar {
+    display: none;
+}
+.nav ul li {
+	width:100%;
+	background:#CCC;
+	line-height:50px;
+	max-height:50px;
+	text-align:center;
+	padding:0px;
+	margin:0px;
+	list-style:none;
+}
+.nav ul li span{
+	max-width:100%;
+	line-height:50px;
+	max-height:50px;
+	font-size:25px;
+	margin:0 auto;
+	padding:0px;
+}
+.nav ul li:hover {
+	background:#069;
+	color:#FFF;
+}	
+
+.nav ul .currentchat{
+	background:#069;
+	color:#FFF;
+}	
+/*灰色图片类*/
+.gray_img {     
+	-webkit-filter: grayscale(100%);   
+	-moz-filter: grayscale(100%);  
+	-ms-filter: grayscale(100%);   
+	-o-filter: grayscale(100%);     
+    filter: grayscale(100%); 	     
+	filter: gray; 
+}
+
+		#overlay{
+			z-index: 9;
+			position:fixed;
+			display: none;
+			top:0;
+			left:0;
+			width: 100%;
+			height: 100%;
+			background-color: #333;
+			opacity:0.5;
+		}
+	.header_left{
+		width:20%;
+		height:50px;
+		/*margin:0px auto;*/
+		/*margin-top:-30px;*/
+		padding:0;
+		/*border:1px solid red;*/
+		border-bottom:1px solid gray;
+		background:#ccc;
+		float:left;
+		text-align:center;
+		font-size:25px;
+		line-height:50px;
+	}	
+	#leftmenu{
+		
+	}
+	.header_right{
+		width:20%;
+		height:50px;
+		/*margin:0px auto;*/
+		/*margin-top:-30px;*/
+		padding:0;
+		/*border:1px solid red;*/
+		border-bottom:1px solid gray;
+		background:#ccc;
+		float:right;
+		text-align:center;
+		font-size:25px;
+		line-height:50px;
+	}
+	#rightmenu{
+		
+	}
+	.header_menu{
+		button:0;
+		z-index:1000;
+		display:none;
+		background:#ccc;
+		font-size:12px;
+		text-align:center;
+	}
+	.header_menu span{
+		display:block;
+		height:80px;
+		min-width:20%;
+		padding:10px 8px;
+		color:#fff;
+		background:#272324;
+		font-size:1.2em;
+		text-decoration:none;
+		text-align:center;
+	}
+</style>
+</head>
+<body>
+	
+<div id="ltian" class="speak_window">
+<div id="overlay"></div>	
+<header class="header">
+<div class="header_left">
+	功能
+	<div class="header_menu" id="leftmenu">
+		<ul>
+			<li>
+			<span >
+			<img src="sk/e.png" title="上传图片">
+			<form>
+			<input type="file" title="上传图片" id="upimg">
+			</form>
+			</span>
+			</li>
+			<li><span >功能1</span></li>
+			<li><span >功能2</span></li>
+			<li><span >功能3</span></li>
+		</ul>
+	</div>
+</div>
+<div class="nav">
+	<p class="set">大家</p>
+	<ul id="us" class="new">
+	</ul>
+</div>
+<div class="header_right">
+	设置
+	<div class="header_menu" id="rightmenu">
+		<ul>
+			<li><span onclick="$('#speak_box').empty();">清除记录</span></li>
+			<li><span onClick="setCookie('qqnum','',365);location.reload();">重新进入</span></li>
+			<li><span>设置2</span></li>
+			<li><span onclick="loadHELP();">更新说明</span></li>
+		</ul>
+	</div>
+</div>
+</header>
+    <div id="speak_box" class="speak_box">
+		<!--
+        <div class="answer">
+            <div class="heard_img left"><img src="/favicon.ico"></div>
+            <div class="answer_text">
+                <p><s>欢迎加入群聊！</s></p>
+                <i></i>
+            </div>
+        </div>
+		-->
+    </div>
+<div class="saying">
+    <img src="images/welcome.gif">
+</div>
+
+<div class="wenwen-footer">
+    <img id="imgbq" src="sk/t.png" style="width: 30px;">
+    <div class="wenwen_text left">
+        <div class="write_box">
+            <input id="sendtext" type="text" class="left" placeholder="请输入要发送的内容">
+
+        </div>
+
+    </div>
+    <div class="wenwen_help right">
+        <button id="sendbtn" onclick="up_say()" class="right">发送</button>
+    </div>
+
+</div>
+<div id="ems"><p></p><p class="tc"></p></div>
+<script src="js/a.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/iNotify.js"></script>
+<script type="text/javascript">
+	function loadHELP(){//加载帮助
+		var xmlhttp;
+		if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		}else{// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+				var helptext=xmlhttp.responseText.replace(/\r\n/g,"<br>").replace(/\n/g,"<br>");
+				receivedmsg('images/info.png',helptext,'','');
+			}
+		}
+		xmlhttp.open("GET","update.log",true);
+		xmlhttp.send();
+	}
+	function receivedmsg(qqheadsrc,msg,idname,classname){
+		var ans = '<div id="'+idname+'" class="answer '+classname+'"><div class="heard_img left"><img src="'+qqheadsrc+'"/></div>';
+		ans += '<div class="answer_text"><p>' + msg + '</p><i></i>';
+		ans += '</div></div>';
+		//$('.speak_box').append(ans);
+		var obj=A.$$(ans);
+		A.$('speak_box').appendChild(obj);
+		for_bottom();
+		return obj;
+	}
+	function sendmsg(qqheadsrc,msg,idname,classname){
+		var str = '<div id="'+idname+'" class="question '+classname+'"><div class="heard_img right"><img src="'+qqheadsrc+'"/></div>';
+		str += '<div class="question_text clear"><p>' + msg + '</p><i></i>';
+		str += '</div></div>';
+		//$('.speak_box').append(str);
+		var obj=A.$$(str);
+		A.$('speak_box').appendChild(obj);
+		for_bottom();
+		return obj;
+	}
+	function esc(da){
+		da=da.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
+		return encodeURIComponent(da);
+	}
+	function justreplace(da){//仅仅替换<>号，保护客户端
+		da=da.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
+		return da;
+	}
+	
+	function movemenu(pos){
+		var menuwidth  = '20%'; // 边栏宽度
+		var menuspeed  = 200; // 边栏滑出耗费时间
+	  
+		var $bdy       = $('body');
+		var $container = $('.speak_window');
+		var $overlay   = $('#overlay');
+		if(pos=='left'){
+			var $burger    = $('#leftmenu');
+			var negwidth   = "+"+menuwidth;
+			var poswidth   = "-"+menuwidth;
+			var $menubtn   = $('.header_left');
+		}else{
+			var $burger    = $('#rightmenu');
+			var negwidth   = "-"+menuwidth;
+			var poswidth   = "+"+menuwidth;
+			var $menubtn   = $('.header_right');
+		}
+		
+	  
+		$menubtn.on('click',function(e){
+			if($bdy.hasClass('openmenu')) {
+				jsAnimateMenu('close');
+			}else{
+				jsAnimateMenu('open');
+			}
+		});
+	  
+		$overlay.on('click', function(e){
+			$menubtn.click();
+			if($bdy.hasClass('openmenu')) {
+				jsAnimateMenu('close');
+			}
+		});
+	  
+		function jsAnimateMenu(tog) {
+			if(tog == 'open') {
+				$overlay.show();
+				$burger.show();
+				$bdy.addClass('openmenu');
+		  
+				$container.animate({marginLeft: negwidth, marginRight: poswidth}, menuspeed);
+				$burger.animate({width:"100%"}, menuspeed);
+				$overlay.animate({right: poswidth}, menuspeed);
+			}
+		
+			if(tog == 'close') {
+				$bdy.removeClass('openmenu');
+		  
+				$container.animate({marginLeft: "0", marginRight: "0"}, menuspeed);
+				$burger.animate({width: "0"}, menuspeed);
+				$overlay.animate({left: "0"}, menuspeed);
+				$overlay.hide();
+				$burger.hide();
+			}
+		}
+	}
+	movemenu('left');
+	movemenu('right');
+	$(function() {
+		$(".nav p").click(function() {
+			var ul = $(".new");
+			if (ul.css("display") == "none") {
+				ul.slideDown();
+			} else {
+				ul.slideUp();
+			}
+			$("#overlay").show();
+		});
+		$(".set").click(function() {
+			var _name = $(this).attr("name");
+			if ($("[name=" + _name + "]").length > 1) {
+				$("[name=" + _name + "]").removeClass("select");
+				$(this).addClass("select");
+			} else {
+				if ($(this).hasClass("select")) {
+					$(this).removeClass("select");
+					$("#overlay").hide();
+				} else {
+					$(this).addClass("select");
+				}
+			}
+		});
+		$(".nav li").click(function() {
+			var li = $(this).html();
+			$(".nav p").html(li);
+			$(".new").hide();
+			/*$(".set").css({background:'none'});*/
+			$("p").removeClass("select");
+			$("#overlay").hide();
+		});
+		$("#overlay").click(function() {
+			$(".new").hide();
+			/*$(".set").css({background:'none'});*/
+			$("p").removeClass("select");
+			$("#overlay").hide();
+		});
+	})
+/************************/
+	var currenttitle=document.title;
+	var iN = new iNotify({
+		effect: 'flash',
+		interval: 500,
+		message:"有消息拉!",
+		audio:{
+			file: ['s/msg.mp4','s/msg.mp3','s/msg.wav']
+		},
+		notification:{
+			title:"通知！",
+			icon:"/favicon.ico",
+			body:'您来了一条新消息'
+		}
+	});
+
+	function inotifyTest(titleinfo,titlet,icont,bodyt){
+		var thissay=bodyt.replace(/<\/?.+?>/g,"").replace(/ /g,"");
+		//thissay=titlet+thissay;
+		//var audiourl='http://cache-a.oddcast.com/c_fs/7d90dcb103b470e7c466d931bb5f59fc.mp3?engine=3&language=10&voice=3&text='+encodeURIComponent(thissay)+'&useUTF8=1';//中文
+		//var audiourl='http://cache-a.oddcast.com/c_fs/bad902c02afc9718b7d0ef59f5678415.mp3?engine=3&language=1&voice=3&text='+encodeURIComponent(thissay)+'&useUTF8=1';//英文
+		//var audiourl='https://ai.baidu.com/aidemo?type=tns2&idx=1&tex='+encodeURIComponent(thissay)+'&cuid=baidu_speech_demo&cod=2&lan=zh&ctp=1&pdt=1&spd=5&per=3&vol=5&pit=5';//逍遥
+		//var audiourl='https://ai.baidu.com/aidemo?type=tns2&idx=1&tex='+encodeURIComponent(thissay)+'&cuid=baidu_speech_demo&cod=2&lan=zh&ctp=1&pdt=1&spd=5&per=4&vol=5&pit=5';//丫丫
+		var audiourl='https://ai.baidu.com/aidemo?type=tns2&idx=1&tex='+encodeURIComponent(thissay)+'&cuid=baidu_speech_demo&cod=2&lan=zh&ctp=1&pdt=1&spd=5&per=0&vol=5&pit=5';//女生
+		//var audiourl='https://ai.baidu.com/aidemo?type=tns2&idx=1&tex='+encodeURIComponent(thissay)+'&cuid=baidu_speech_demo&cod=2&lan=zh&ctp=1&pdt=1&spd=5&per=5&vol=5&pit=5';//男生
+		//iN.setFavicon(msgnum).setTitle(titleinfo).notify({
+		iN.setTitle(titleinfo).setURL(audiourl).notify({
+			title:titlet,
+			icon:icont,
+			body:bodyt
+		}).player()
+	}
+	function inotifyClear(){
+		//iN.faviconClear().setTitle();
+		iN.setTitle();
+		document.title=currenttitle;
+	}
+</script>
+<script>
+	function to_write() {
+		$('.wenwen_btn img').attr('src', 'images/yy_btn.png');
+		$('.wenwen_btn').attr('onclick', 'to_say()');
+		$('.write_box,.wenwen_help button').show();
+		$('.circle-button,.wenwen_help a').hide();
+		$('.write_box input').focus();
+		for_bottom();
+	}
+
+	function to_say() {
+		$('.write_list').remove();
+		$('.wenwen_btn img').attr('src', 'images/jp_btn.png');
+		$('.wenwen_btn').attr('onclick', 'to_write()');
+		$('.write_box,.wenwen_help button').hide();
+		$('.circle-button,.wenwen_help a').show();
+	}
+
+	function up_say() {
+		return true;
+		$('.write_list').remove();
+
+		var text = $('.write_box input').val(),
+		str = '<div class="question">';
+		str += '<div class="heard_img right"><img src="/favicon.ico"/></div>';
+		str += '<div class="question_text clear"><p>' + text + '</p><i></i>';
+		str += '</div></div>';
+
+		if (text.trim() == '') {
+			//alert('请输入提问！');
+			$('.write_box input').val('');
+			$('.write_box input').focus();
+		} else {
+			$('.speak_box').append(str);
+			$('.write_box input').val('');
+			//					$('.write_box input').focus();
+			$(".write_box input").blur();
+			autoWidth();
+			for_bottom();
+			setTimeout(function() {
+				var Benelen = Math.floor(Math.random() * 29);
+				var ans = '<div class="answer"><div class="heard_img left"><img src="http://www.jq22.com/img/cs/500x500-2.png"/></div>';
+				ans += '<div class="answer_text"><p>这里是接收的话</p><i></i>';
+				ans += '</div></div>';
+				$('.speak_box').append(ans);
+				for_bottom();
+			}, 1000);
+		}
+	}
+
+	var wen = document.getElementById('wenwen');
+
+	function _touch_start(event) {
+		event.preventDefault();
+		$('.wenwen_text').css('background', '#c1c1c1');
+		$('.wenwen_text span').css('color', '#fff');
+		$('.saying').show();
+	}
+
+	function _touch_end(event) {
+		event.preventDefault();
+		$('.wenwen_text').css('background', '#fff');
+		$('.wenwen_text .circle-button').css('color', '#666');
+		$('.saying').hide();
+		var str = '<div class="question">';
+		str += '<div class="heard_img right"><img src="images/dglvyou.jpg"/></div>';
+		str += '<div class="question_text clear"><p>不好意思，我听不清！</p><i></i>';
+		str += '</div></div>';
+		$('.speak_box').append(str);
+		for_bottom();
+		setTimeout(function() {
+			var ans = '<div class="answer"><div class="heard_img left"><img src="images/dglvyou.jpg"/></div>';
+			ans += '<div class="answer_text"><p>我不知道你在说什么?</p><i></i>';
+			ans += '</div></div>';
+			$('.speak_box').append(ans);
+			for_bottom();
+		}, 1000);
+	}
+
+	//wen.addEventListener("touchstart", _touch_start, false);
+	//wen.addEventListener("touchend", _touch_end, false);
+
+	function for_bottom() {
+		var speak_height = $('.speak_box').height();
+		$('.speak_box,.speak_window').animate({
+			scrollTop: speak_height
+		},500);
+	}
+
+	function autoWidth() {
+		$('.question_text').css('max-width', $('.question').width() - 60);
+	}
+	autoWidth();
+ /**websocket**/
+	function flicker(oBox){ 
+		var backupoBox=oBox.style.color;
+		var flickertimer = null;   //定义时间器  
+		var i = 0;   
+		if(!$(oBox).hasClass("flickering")){
+			$(oBox).addClass("flickering"); 
+		}else{
+			return ;
+		}
+		clearInterval(flickertimer); //先清空时间器  
+		oBox.onmousedown = function(){ //电脑端
+			clearInterval(flickertimer);
+			inotifyClear();//恢复inotify
+			oBox.style.color=backupoBox;
+			$(oBox).removeClass("flickering"); 
+			return ;
+		};
+		oBox.ontouchstart = function(){ //手机端
+			clearInterval(flickertimer);
+			inotifyClear();//恢复inotify
+			oBox.style.color=backupoBox;
+			$(oBox).removeClass("flickering"); 
+			return ;
+		};
+		flickertimer = setInterval(function () {  
+			oBox.style.color = i++ % 2 ? "#08C" : "#F1F1F1";  // 控制闪烁
+			if(!$(oBox).hasClass("flickering")){
+				clearInterval(flickertimer);
+				inotifyClear();
+				oBox.style.color=backupoBox;
+				$(oBox).removeClass("flickering");
+				return ;
+			}  //控制闪烁次数  
+		}, 500 );
+	}
+	function linkfilter(msg){//替换文本中超链接
+		var reg = /(http:\/\/|https:\/\/)((\w|=|\?|:|%|\.|\/|&|-)+)/g;
+		return msg.replace(reg, "<a target='_blank' href='$1$2'>$1$2</a>");
+	}
+	function unflicker(oBox){//去闪烁,原本有闪烁返回true，没有则返回false
+		if($(oBox).hasClass("flickering")){
+			$(oBox).removeClass("flickering"); 
+			return true;
+		}
+		return false;
+	}
+	function setCookie(c_name,value,expiredays){
+		var exdate=new Date();
+		exdate.setDate(exdate.getDate()+expiredays);
+		document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+	}
+	function getCookie(c_name){
+		if(document.cookie.length>0){
+			c_start=document.cookie.indexOf(c_name + "=");
+			if (c_start!=-1){ 
+				c_start=c_start + c_name.length+1; 
+				c_end=document.cookie.indexOf(";",c_start);
+				if (c_end==-1) c_end=document.cookie.length;
+				return unescape(document.cookie.substring(c_start,c_end));
+			} 
+		}
+		return "";
+	}
+ (function(){
+	var key='all',mkey;
+	var users={};
+	var url='ws://118.89.102.104:3000';
+	var so=false,n=false;
+	var lus=A.$('us'),lct=A.$('ct');
+	var selfname="";
+	var onlinetag=false;
+	var onlinenum=0;
+	function getqqname(qq){
+		if(!isNaN(qq)&&qq>10000){
+			$.ajax({ 
+				type: "get", 
+				url: "getqqname.php?qqnum="+qq,  
+				async: false,
+				success: function(data){
+					if(data.length>0){
+						qqnum=qq;
+						qqname=data;
+					}else{
+						qqnum='';
+						qqname=randname;
+						alert('获取QQ昵称失败');
+					}
+				},
+				error: function(){ 
+					qqnum='';
+					qqname=randname;
+					alert('获取QQ昵称失败');
+				}
+			});
+		}else{
+			qqnum='';
+			qqname=randname;
+			alert('QQ号错误，获取QQ昵称失败');
+		}
+	}
+	var qqnum=getCookie('qqnum');
+	var qqname=getCookie('qqname');
+	var randname='<?php echo $nicheng;?>';
+	function st(){
+		if(qqname!=null&&qqname!=""&&qqnum!=null&&qqnum!=""){
+			n=qqname;
+		}else{
+			n=prompt('用QQ号登陆聊天室（故障中）\n或直接输入昵称登陆聊天室（推荐）\n或直接确定获取随机昵称登录聊天室：',qqname);
+			if(n.trim()==""){
+				n=randname;
+			}else if(isNaN(n)){
+				//不是数字
+			}else{
+				getqqname(n);
+				n=qqname;
+				if(qqnum!=''){
+					n=prompt('是否使用别的昵称：',n);
+					if(!n)n=qqname;
+					if(n.trim()==""){
+						n=randname;
+					}
+				}
+			}
+		}
+		n=n.substr(0,16);
+		qqname=n;//保存昵称
+		n=esc(n);
+		if(!n){
+			return ;	
+		}
+		setCookie('qqname',qqname,365);
+		setCookie('qqnum',qqnum,365);
+		so=new WebSocket(url);
+		so.onopen=function(){
+			if(so.readyState==1){
+				so.send('type=add&ming='+n+'&qqnum='+qqnum);
+			}
+		}
+		$('.write_box input').focus();
+		so.onclose=function(){
+			so=false;
+			onlinetag=false;
+			onlinenum=0;
+			iN.setFavicon(onlinenum);
+			document.title='呀，掉线了';
+			if(confirm("您已退出聊天室，是否重新进入？")){
+				window.location.reload();
+			}
+		}
+		
+		so.onmessage=function(msg){
+			eval('var da='+msg.data);
+			var obj=false,c=false;
+			if(da.type=='add'){
+				++onlinenum;
+				iN.setFavicon(onlinenum);
+				da.name=justreplace(da.name);
+				da.code=justreplace(da.code);
+				da.time=justreplace(da.time);
+				if(da.qqnum&&da.qqnum!=''){
+					qqheadsrc='http://q1.qlogo.cn/g?b=qq&nk='+da.qqnum+'&s=100';
+				}else{
+					qqheadsrc='images/heisenberg.png';
+				}
+				//var obj=A.$$('<p style="background-image:url('+qqheadsrc+');background-repeat:no-repeat;background-position:3px 3px;background-size:20px 20px;padding-left:25px;" alt="qq:'+da.qqnum+'" title="qq:'+da.qqnum+'">'+da.name+'</p>');
+				var obj=A.$$('<li><span style="background-image:url('+qqheadsrc+');background-repeat:no-repeat;background-position:3px 3px;background-size:25px 25px;padding-left:30px;" alt="qq:'+da.qqnum+'" title="qq:'+da.qqnum+'">'+da.name+'</span></li>');
+				lus.appendChild(obj);
+				//users[da.code]=da.name;
+				cuser(obj,da.code);
+				obj=receivedmsg(qqheadsrc,'大家好，我是“' + da.name + '”','','user_'+da.code);
+				c=da.code;
+			}else if(da.type=='madd'){
+				onlinenum=da.users.length;
+				iN.setFavicon(onlinenum);
+				document.title='与“大家”聊天中';
+				currenttitle=document.title;
+				da.time=justreplace(da.time);
+				da.name=justreplace(da.name);
+				da.code=justreplace(da.code);
+				mkey=da.code;
+				da.users.unshift({'code':'all','name':'大家'});
+				for(var i=0;i<da.users.length;i++){
+					da.users[i].name=justreplace(da.users[i].name);
+					da.users[i].code=justreplace(da.users[i].code);
+					if(da.users[i].qqnum&&da.users[i].qqnum!=''){
+						qqheadsrc='http://q1.qlogo.cn/g?b=qq&nk='+da.users[i].qqnum+'&s=100';
+					}else{
+						qqheadsrc='images/heisenberg.png';
+					}
+					if(i>0){
+						var obj=A.$$('<li><span style="background-image:url('+qqheadsrc+');background-repeat:no-repeat;background-position:3px 3px;background-size:25px 25px;padding-left:30px;" alt="qq:'+da.users[i].qqnum+'" title="qq:'+da.users[i].qqnum+'">'+da.users[i].name+'</span></li>');
+					}else{
+						var obj=A.$$('<li><span>'+da.users[i].name+'</span></li>');
+					}
+					if(mkey!=da.users[i].code){
+						lus.appendChild(obj);
+						cuser(obj,da.users[i].code);
+					}else{
+						selfname=da.users[i].name;
+						if(da.users[i].qqnum==''){
+							receivedmsg('images/info.png','登录成功，你的昵称是<font color="red">“' + da.name + '”</font>','','user_'+da.users[i].code);
+						}else{
+							receivedmsg('images/info.png','登录成功，你的昵称是<font color="red">“' + da.name + '”('+da.users[i].qqnum+')</font>','','user_'+da.users[i].code);
+						}						
+					}
+					$(users['all']).click();
+				}
+				onlinetag=true;
+			}else if(da.type=='rmove'){
+				--onlinenum;
+				iN.setFavicon(onlinenum);
+				da.time=justreplace(da.time);
+				da.nrong=justreplace(da.nrong);
+				receivedmsg('images/info.png','“'+$(users[da.nrong]).text()+'”退出了聊天室','','user_'+da.nrong);
+				if(da.nrong==key){//如果离开的正好是当前聊天的对象
+					inotifyClear();
+					unflicker(users[key]);//去除闪烁
+					users['all'].click();
+				}else if(unflicker(users[da.nrong])){//如果当前退出的人跟你说过话
+					inotifyClear();
+				}
+				users[da.nrong].del();
+				delete users[da.nrong];
+				$('.user_'+da.nrong).each(function(){
+					var pele=$(this).find('p');
+					pele.html('<s>'+pele.html()+'</s>');
+					var imgele=$(this).find('img');
+					imgele.addClass('gray_img');
+					//console.log($(this).find('p').html());
+				});
+			}else{
+				da.nrong=justreplace(da.nrong);
+				da.code1=justreplace(da.code1);
+				da.code=justreplace(da.code);
+				da.time=justreplace(da.time);
+				da.msgid=justreplace(da.msgid);//消息id
+				da.nrong=linkfilter(da.nrong);
+				da.nrong=da.nrong.replace(/{\\(\d+)}/g,function(a,b){
+					return '<img src="sk/'+b+'.gif">';
+				}).replace(/^data\:image\/png;base64\,.{50,}$/i,function(a){
+					return '<img src="'+a+'">';
+				});
+				//da.code 发信息人的code
+				var barragesrc='images/heisenberg.png';
+				if(da.qqnum&&da.qqnum!=''){
+					barragesrc='http://q1.qlogo.cn/g?b=qq&nk='+da.qqnum+'&s=100';
+				}
+				if(da.code1==mkey){//发给我的
+					var inotifyicon='/favicon.ico';
+					if(da.qqnum&&da.qqnum!=''){
+						inotifyicon='http://q1.qlogo.cn/g?b=qq&nk='+da.qqnum+'&s=100';
+					}
+					inotifyTest("新消息来了",$(users[da.code]).text()+" 对你说：",inotifyicon,da.nrong);
+					flicker(users[da.code]);//闪烁
+					obj=receivedmsg(barragesrc,da.nrong,da.msgid,'user_'+da.code);
+					c=da.code;
+				}else if(da.code==mkey){//我发的
+					obj=sendmsg(barragesrc,da.nrong,da.msgid,'user_'+da.code1);
+					c=da.code1;
+				}else if(da.code==false){
+					obj=sendmsg(barragesrc,da.nrong,da.msgid,'');
+				}else if(da.code1){
+					obj=receivedmsg(barragesrc,da.nrong,da.msgid,'user_'+da.code);
+					c=da.code;
+				}
+			}
+			if(c){
+				if(c!=key&&key!='all'){
+					$(obj).hide();
+				}
+				$(obj).click(function(){
+					if(users[c]){
+						users[c].click();
+					}else{
+						//sendBarrage('该用户已退出群聊！','images/error.png','javascript:;');
+						document.getElementById('sendtext').focus();
+					}
+				});
+			}
+		}
+	}
+	$('#sendbtn').click(function(){
+		if(!so){
+			 return st();
+		}
+		var da=$('.write_box input').val().trim();
+		if(da==''){
+			//alert('内容不能为空');
+			$('#sendtext').focus();
+			return false;	
+		}
+		$('#sendtext').val('');
+		so.send('nr='+esc(da)+'&key='+key+'&qqnum='+qqnum);
+		inotifyClear();//恢复inotify
+		unflicker(users[key]);//去除闪烁
+		$('#sendtext').focus();
+	});
+	$('.write_box input').keydown(function(e){
+		var e=e||event;
+		if(e.keyCode==13){
+			$('#sendbtn').click();
+		}
+	});
+	function cuser(t,code){
+		users[code]=t;
+		t.onclick=function(){
+			t.parentNode.children.rcss('currentchat','');
+			t.rcss('','currentchat');
+			var li = $(this).html();
+			$(".nav p").html(li);
+			$(".new").hide();
+			/*$(".set").css({background:'none'});*/
+			$("p").removeClass("select");
+			var lastkey=key;//保证一直点只显示一次
+			key=code;
+			//document.title=selfname+"<==>"+this.innerHTML;
+			//currenttitle=document.title;
+			document.title='与“'+$(users[key]).text()+'”聊天中';
+			currenttitle=document.title;
+			var ckele=document.getElementsByClassName('currentchat')[0];
+			unflicker(ckele);//去除闪烁
+			$('.answer').hide();
+			$('.question').hide();
+			$('.user_'+code).show();
+			if(code=='all'){
+				$('.answer').show();
+				$('.question').show();
+				if(lastkey!=code){//保证一直点只显示一次
+					//sendBarrage('已切换到与大家的群聊模式！','images/agree_tips.png','javascript:;');
+				}
+			}else{
+				if(lastkey!=code){//保证一直点只显示一次
+					//sendBarrage('已切换到与“'+this.innerHTML+'”的私聊模式！','images/agree_tips.png','javascript:;');
+				}
+			}
+			for_bottom();
+			$("#overlay").hide();//去除灰色层
+			document.getElementById('sendtext').focus();
+		}
+	}
+	st();
+	
+	var bq=A.$('imgbq'),ems=A.$('ems');
+	var l=80,r=4,c=5,s=0,p=Math.ceil(l/(r*c));
+	var pt='sk/';//表情所在目录
+	bq.onclick=function(e){//表情按钮被点击，显示表情框
+		var e=e||event;
+		if(!so){
+			 return st();
+		}
+		ems.style.display='block';
+		document.onclick=function(){
+			gb();	
+		}
+		ct();
+		try{e.stopPropagation();}catch(o){}
+	}
+	
+	for(var i=0;i<p;i++){//生成四页表情
+		var a=A.$$('<a href="javascript:;">'+(i+1)+'</a>');
+		ems.children[1].appendChild(a);
+		ef(a,i);
+	}
+	ems.children[1].children[0].className='ck';//默认一开始显示第一页的表情
+	
+	function ct(){//表情框窗体
+		var wz=bq.weiz();
+		with(ems.style){
+			top=wz.y-242-15+'px';
+			right=wz.x+bq.offsetWidth-235+'px';
+		}
+	}
+		
+	function ef(t,i){//第i页表情被点击
+		t.onclick=function(e){
+			var e=e||event;
+			s=i*r*c;
+			ems.children[0].innerHTML='';
+			hh();
+			this.parentNode.children.rcss('ck','');
+			this.rcss('','ck');
+			try{e.stopPropagation();}catch(o){}
+		}
+	}
+	
+	function hh(){//生成第p页的表情 每页4*5个表情
+		var z=Math.min(l,s+r*c);//最多显示l （80）个表情
+		for(var i=s;i<z;i++){
+			var a=A.$$('<img src="'+pt+i+'.gif">');
+			hh1(a,i);
+			ems.children[0].appendChild(a);
+		}
+		ct();
+	}
+	
+	function hh1(t,i){//增加表情点击监听事件，点击第i个表情并以 {\i} 这种形式显示到输入框中
+		t.onclick=function(e){
+			var e=e||event;
+			A.$('sendtext').value+='{\\'+i+'}';
+			if(!e.ctrlKey){//按住ctrl可以一次性输入多个表情
+				gb();
+			}
+			try{e.stopPropagation();}catch(o){}
+		}
+	}
+	
+	function gb(){//保持表情输入框存在
+		ems.style.display='';
+		A.$('sendtext').focus();
+		document.onclick='';
+	}
+	hh();
+	A.on(window,'resize',function(){
+		A.$('ltian').style.height=(document.documentElement.clientHeight - 70)+'px';
+		ct();
+	});
+	
+	var fimg=A.$('upimg');
+	var img=new Image();
+	var dw=400,dh=300;
+	A.on(fimg,'change',function(ev){
+		if(!so){
+			st();
+			return false;
+		}
+		if(key=='all'){
+			alert('由于资源限制 发图只能私聊');
+			return false;	
+		}
+		var f=ev.target.files[0];
+		if(f.type.match('image.*')){
+			var r = new FileReader();
+			r.onload = function(e){
+				img.setAttribute('src',e.target.result);
+		    };
+			r.readAsDataURL(f);
+		}
+	});
+	img.onload=function(){
+		ih=img.height,iw=img.width;
+		if(iw/ih > dw/dh && iw > dw){
+			ih=ih/iw*dw;
+			iw=dw;
+		}else if(ih > dh){
+			iw=iw/ih*dh;
+			ih=dh;
+		}
+		var rc = A.$$('canvas');
+		var ct = rc.getContext('2d');
+		rc.width=iw;
+		rc.height=ih;
+		ct.drawImage(img,0,0,iw,ih);
+		var da=rc.toDataURL();
+		so.send('nr='+esc(da)+'&key='+key+'&qqnum='+qqnum);
+	}
+})();
+</script>
+</body>
+</html>

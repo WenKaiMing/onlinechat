@@ -1,0 +1,191 @@
+		#Upload_overlay{
+			z-index: 99;
+			position:fixed;
+			display: none;
+			top:0;
+			left:0;
+			width: 100%;
+			height: 100%;
+			background-color: #333;
+			opacity:0.5;
+		}
+		.Upload_dropbox{
+			z-index: 100;
+			display: none;
+			position: fixed;
+			width:500px;
+			max-width:90%;
+			height:520px;
+			max-height:90%;
+			margin:auto;
+			top:0;
+			right:0;
+			bottom: 0;
+			left:0;
+			background-color: #fff;
+			border-radius:6px;
+			transition-duration: 0.9s;
+			-webkit-transition-duration: 0.9s;
+			overflow:hidden;
+			text-align: center;
+		}
+		.Upload_items-container{
+			max-height:100%;
+		}
+		.Upload_mainarea{
+			width:500px;
+			max-width:100%;
+			height:520px;
+			max-height:100%;
+			text-align: center;
+			
+		}
+		.Upload_head{
+			margin:0px;
+			font-size:30px;
+			height:52px;
+			max-height:10%;
+			color:#aaa;
+		}
+		.Upload_content{
+			border: 3px dashed gray;
+			border-radius: 10px;
+			margin: 10px 20px;
+			height:396px;/*394+10+10=416 520-52-52=416 总共520*/
+			max-height:80%;
+			overflow: auto;
+			padding:2px 8px;
+		}
+		.Upload_footer{
+			margin:5px auto;
+			height:42px;
+			max-height:10%;
+		}
+		.Upload_btn{
+			border-radius: 20px;
+			box-sizing: border-box;
+			border-width: 2px;
+			background-color: transparent;
+			font-size: 14px;
+			font-weight: 500;
+			padding: 7px 18px;
+			cursor:pointer;
+		}
+		/*画一个叉号，表示推出界面*/
+		.Upload_css_close{display:inline-block; width:15px; height:2px; background:#000; font-size:0; line-height:0;vertical-align:middle;-webkit-transform: rotate(45deg);}
+		.Upload_css_close:after { content:'.'; display:block; width:15px; height:2px; background:#000;-webkit-transform: rotate(90deg);}
+
+		/*表格样式*/
+		.Upload_table{
+			width:100%;
+			border-collapse: collapse;
+		}
+		#Upload_content tr:first-child td{
+			border-top-width: 0px;
+		}
+		#Upload_content tr td:last-child{
+			cursor: pointer;
+			color: red;
+		}
+		#Upload_content tr td{
+			padding: 8px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			border-top:1px solid #9A9A9A;
+		}
+		#Upload_content tr:hover{
+			background-color: #d5d5d5;
+		}
+		#Upload_content tr:active{
+			background-color: #9A9A9A;
+		}
+		a:link{
+			color:blue;
+		}
+		a:visited{
+			color:blue;
+		}
+		a:hover{
+			color:blue;
+		}
+		a:active{
+			color:red;
+		}
+		
+        .Upload_fileInputP {
+			border-radius: 20px;
+			box-sizing: border-box;
+			border-width: 2px;
+			background-color: transparent;
+			font-size: 14px;
+			font-weight: 500;
+			cursor:pointer;
+			width: 100px;
+            height: 30px;
+			display: inline-block;
+			border-radius: 5px;
+			overflow: hidden;
+			position: relative;
+			cursor:pointer;
+			
+            /*display: inline-block;
+            width: 100px;
+            height: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+			cursor:pointer;*/
+        }
+        .Upload_fileInputP i {
+			position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 30px;
+            color: #fff;
+            background: #7d8f33;
+            text-align: center;
+            line-height: 30px;
+			cursor:pointer;
+        }
+        #Upload_fileInput {
+            position: relative;
+            left: 0;
+            top: -30px;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+			border:0;
+			padding:0;
+			width: 100px;
+            height: 30px;
+			cursor:pointer;
+        }
+
+        .Upload_progressParent {
+            width: 200px;
+            height: 20px;
+            border-radius: 5px;
+            background: #ccc;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .Upload_progress {
+            width: 0%;
+            height: 20px;
+			margin-top:0px;
+            background: #7d8f33;
+        }
+
+        .Upload_progressNum {
+            display: inline-block;
+            width: 100%;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
