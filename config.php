@@ -1,6 +1,6 @@
 <?php
 	//ws://167.160.188.2:3000
-	$version="18.7.8.23.31";
+	$version="18.10.7.20.59";
 	$wsaddr="118.89.102.104";
 	//$wsaddr="wenkaiming.tpddns.cn";
 	$wsport="3000";

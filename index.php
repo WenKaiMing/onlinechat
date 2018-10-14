@@ -162,9 +162,11 @@
 </div>
 <div id="ems"><p></p><p class="tc"></p></div>
 <script>
-if(typeof(WebSocket)=='undefined'){
-	alert('你的浏览器不支持 WebSocket ，推荐使用Google Chrome 或者 Mozilla Firefox');	
-}
+	if(typeof(WebSocket)=='undefined'){
+		console.log('你的浏览器不支持 WebSocket ，推荐使用Google Chrome 或者 Mozilla Firefox');
+		alert('你的浏览器不支持 WebSocket ，推荐使用Google Chrome 或者 Mozilla Firefox');	
+		document.write('你的浏览器不支持 WebSocket ，推荐使用Google Chrome 或者 Mozilla Firefox');
+	}
 	function getupdate(obj){
 		if(obj){
 			if("version" in obj){
